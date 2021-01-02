@@ -1,0 +1,127 @@
+<form>
+    <div>
+        <h3>Original work details</h3>
+        <p>URL: <input type="text" id="ao3Link"></input></p>
+        <p>Title: <input type="text" id="ao3Title"></input></p>
+        <p>Author: <input type="text" id="ao3Author"></input></p>
+        <p>Summary: <textarea id="ao3Summary"></textarea></p>
+    </div>
+
+    <div>
+        <h3>Podfic</h3>
+        <p>Length: <input type="text" id="podLength" /></p>
+        <p>Cover URL: <input type="text" id="podCover" /></p>
+        <p>Cover description: <input type="text" id="podCoverDesc" /></p>
+        <p>MP3 URL: <input type="text" id="podMP3URL" /></p>
+        <p>Other audio formats (full HTML): <textarea id="podformats"></textarea></p>
+    </div>
+
+    <div>
+        <h3>Credits</h3>
+
+    </div>
+<div>
+    <h3>Output</h3>
+    <p><input type="button" id="generate" value="Generate"></input></p>
+    <p>Summary:<br/><textarea id="outputSummary"></textarea></p>
+    <p>Body:<br/><textarea id="outputMain"></textarea></p>
+</div>
+<div>
+    <input type="reset" />
+</div>
+    
+</form>
+
+<script>
+    var meta = {};
+
+    document.getElementById("generate").onclick = function() {doMeta(); myFunction()};
+
+    
+    
+    function myFunction() {
+        doSummary()
+        doMainText()
+    }
+
+    function doMeta() {
+        meta.test = "things";
+        meta.ao3 = doAo3();
+        meta.pod = {};
+        meta.pod.length = document.getElementById("podLength").value;
+        meta.pod.cover = document.getElementById("podCover").value;
+        meta.pod.coverDesc = document.getElementById("podCoverDesc").value;
+        meta.pod.mp3URL = document.getElementById("podMP3URL").value;
+        meta.pod.otherFormats = document.getElementById("podformats").value;
+        
+
+    }
+
+    function doAo3() {
+        let ao3Obj = {};
+
+        ao3Obj.link = document.getElementById("ao3Link").value;
+        ao3Obj.title = document.getElementById("ao3Title").value;
+        ao3Obj.author = document.getElementById("ao3Author").value;
+        ao3Obj.summary = document.getElementById("ao3Summary").value;
+
+        return ao3Obj;
+    }
+
+    function doSummary() {
+
+        let s = `${meta.ao3.summary}
+
+--
+
+Podfic of <a href="${meta.ao3.link}">${meta.ao3.title}</a> by ${meta.ao3.author}.
+Length ${meta.pod.length}. Author's summary above.`
+
+
+        document.getElementById("outputSummary").value = s;
+
+
+    }
+
+    function doMainText() {
+        let s;
+
+        let moreFormats = meta.pod.otherFormats;
+        if (moreFormats.length > 0) {
+            moreFormats = "<br/>"+moreFormats;
+        }
+
+        s = `<p align="center"><img src="${meta.pod.cover}" alt="Cover. ${meta.pod.coverDesc} Title: ${meta.ao3.title}. Credits: written by ${meta.ao3.author}, read by oakleaf." width="480" height="480" /></p>
+
+<p align="center"><b>This is a podfic of <em>${meta.ao3.title}</em> by ${meta.ao3.author}</b></p>
+
+<h3>Details</h3>
+<p>Length: ${meta.pod.length}</p>
+
+<h3>Streaming &amp; Download</h3>
+
+<p>
+  <audio src="${meta.pod.mp3URL}" crossorigin="anonymous" preload="metadata" controls="controls"></audio>
+</p>
+
+<p>Download:<br/><a href="${meta.pod.mp3URL}" rel="nofollow">as mp3 from Internet Archive</a>${moreFormats}</p>
+
+
+<h3>Credits</h3>
+
+<h4>Music</h4>
+
+<p></p>
+
+<h4>Cover art</h4>
+
+<p>
+Made on <a href="https://pixlr.com/x/" rel="nofollow">Pixlr X</a> using the following stock images from Unsplash
+</p><ul>
+<li><a href="" rel="nofollow"></a></li>
+</ul>`
+
+        document.getElementById("outputMain").value = s;
+
+    }
+</script>
